@@ -1,0 +1,72 @@
+{% extends 'basehtml.html' %}
+{% block title %}
+    <title>
+    登录界面
+    </title>
+{% endblock %}
+{% block head %}
+    <style>
+    body{
+        background-color: #2aabd2;
+    }
+    .container{
+        position: absolute;
+        top: 300px;
+        left:700px;
+        height: 160px;
+        width: 400px;
+        background-color: #f8f8f8;
+        border-radius: 20px;
+        text-align: center;
+
+    }
+    #remember{
+        position: relative;
+        top:3px
+    }
+    #lander{
+        position: relative;
+        left:40px;
+        width:95px
+    }
+    #register{
+        position: relative;
+        left:50px
+    }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container">
+    <div class="row">
+        <h3 class="col-lg-2">密码登录</h3>
+        {% csrf_token %}
+        <div><span>姓名:</span><input type="text" id='username' class="col-lg-4" name="username" placeholder="请输入你的名字"></div>
+        <div><span>密码:</span><input type="password" id='pwd' class="col-lg-4" name="password" placeholder="请输入你的密码"></div>
+        <input type="checkbox" id="remember" name="remember"><span style="font-size: 13px">记住姓名</span>
+        <input type="submit" class="col-lg-4" value="登录" id="lander"><a id="register" href="#">注册</a>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            $('#lander').click(function(){
+             username = $('#username').val();
+             password = $('#pwd').val();
+             csrf = $('input[name="csrfmiddlewaretoken"]').val();
+             remember = $('input[name="remember"]').prop('checked');
+                params={
+                 'username':username,
+                 'password':password,
+                 'csrfmiddlewaretoken':csrf,
+                 'remember':remember };
+             $.post('/users/landon/',params,function (data) {
+                 if (data.res==0){
+                     $('username').next().html('用户或者密码错误').show()
+
+                 }else{
+                     location.href = data.next_url
+                 }
+             })
+            })
+        })
+    </script>
+{% endblock %}
